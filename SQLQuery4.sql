@@ -1,4 +1,5 @@
 ﻿
+
 --Expected Answer key: https://gist.github.com/AdamSheaffer/8dda90933e63c35bb7dbf585fc7dee71
 
 -- What grades are stored in the database?
@@ -15,7 +16,7 @@ select top 76 name from Author
 order by name;
 
 --Starting with the above query, add the grade of each of the authors.
-select top 76 a.name, g.Name 
+select top 76 a.name, g.Name
 from Author a
 join Grade g on a.GradeId = g.id
 order by a.name;
@@ -46,8 +47,8 @@ where grade.Name = '3rd grade';
 select count(Author.id) 'total 1st through 3rd graders'
 from Author
 join Grade on Author.GradeId = Grade.id
-where grade.Name = '1st grade' 
-or grade.name = '2nd grade' 
+where grade.Name = '1st grade'
+or grade.name = '2nd grade'
 or grade.name = '3rd grade';
 
 -- What is the total number of poems written by fourth graders?
@@ -83,7 +84,7 @@ join author	a on p.AuthorId = a.id
 group by p.AuthorId, a.Name
 order by 'poems by author' desc;
 
--- How many poems have an emotion of sadness? 
+-- How many poems have an emotion of sadness?
 select count(pe.Id) 'total sad poems'
 from PoemEmotion pe
 join Emotion e on pe.EmotionId = e.id
@@ -126,7 +127,22 @@ group by g.Name
 order by 'fearful poems';
 
 --Which emotion is associated with the least number of poems?
+select top 1 count(pe.id) 'poem count', e.Name 'least referenced emotion'
+from PoemEmotion pe
+join Emotion e on pe.EmotionId = e.id
+group by e.Name;
+
 --Which grade has the largest number of poems with an emotion of joy?
+select top 1 count(*) '#of joyful poems', g.Name 'grade name'
+from PoemEmotion pe
+join Emotion e on pe.EmotionId = e.id
+join Poem p on pe.PoemId = p.Id
+join Author a on a.id = p.AuthorId
+join Grade g on g.id = a.GradeId
+where e.Name = 'joy'
+group by g.Name
+order by '#of joyful poems' desc;
+
 --Which gender has the least number of poems with an emotion of fear?
 select top 76 a.*, g.Name
 from Author a
